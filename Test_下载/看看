@@ -1,0 +1,52 @@
+
+
+
+(1)bytesRead :当前一次读取的字节数（100k）
+totalBytesRead:已经下载的字节数（4.8m）
+totalBytesEspectedToRead :文件总的大小
+进度条的百分比==totalBytesRead/totalBytesEspectedToRead.
+
+
+
+
+//取得一个目录下得所有文件名
+NSArray *files = [fm subpathsAtPath: path];
+
+
+
+
+
+//获取即将要下载文件的大小
+-(long long)getFilesize:(NSString *)url
+{
+
+ NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+ request.HTTPMethod = @"HEAD";
+ NSURLResponse *response = nil;
+ [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
+ return response.expectedContentLength;
+
+}
+
+
+
+下载完成后需要将文件移到另外文件夹中，并且添上对应的后缀（.mp4=======================）。
+
+问题来了，如何获知你要下载文件的后缀呢？？？？？？？？？？？？？？？？？。。。。。。。。。。。
+
+
+
+NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+//初始化临时文件路径
+NSString *folderPath = [path stringByAppendingPathComponent:@"temp"];
+//创建文件管理器
+NSFileManager *fileManager = [NSFileManager defaultManager];
+//判断temp文件夹是否存在
+BOOL fileExists = [fileManager fileExistsAtPath:folderPath];
+
+if (!fileExists) {//如果不存在说创建,因为下载时,不会自动创建文件夹
+[fileManager createDirectoryAtPath:folderPath
+withIntermediateDirectories:YES
+attributes:nil
+error:nil];
+}
